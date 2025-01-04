@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gigaliquid - NFT & Meme Crypto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f3f4f6;
+            color: #333;
+        }
+        header {
+            background: linear-gradient(to right, #1a73e8, #3a8bf5);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            background: #333;
+            padding: 10px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        section {
+            padding: 20px;
+            text-align: center;
+        }
+        .wallet-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .wallet-button {
+            background: #1a73e8;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .wallet-button:hover {
+            background: #0f62bf;
+        }
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 20px;
+        }
+    </style>
+    <!-- Ethers.js for MetaMask -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <!-- Coinbase Wallet SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@coinbase/wallet-sdk@3.9.3/dist/wallet-sdk.umd.min.js"></script>
+    <!-- WalletConnect -->
+    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/client@1.8.0/dist/umd/index.min.js"></script>
+    <script>
+        async function connectWallet(walletName) {
+            if (walletName === "MetaMask") {
+                // MetaMask Integration
+                if (typeof window.ethereum !== "undefined") {
+                    try {
+                        const provider = new ethers.providers.Web3Provider(window.ethereum);
+                        await provider.send("eth_requestAccounts", []);
+                        const signer = provider.getSigner();
+                        const address = await signer.getAddress();
+                        alert(`Connected to MetaMask! Address: ${address}`);
+                    } catch (error) {
+                        alert("MetaMask connection failed.");
+                        console.error(error);
+                    }
+                } else {
+                    alert("MetaMask is not installed. Please install it to connect.");
+                }
+            } else if (walletName === "Coinbase") {
+                // Coinbase Wallet Integration
+                try {
+                    const CoinbaseWalletSDK = window.CoinbaseWalletSDK;
+                    const coinbaseWallet = new CoinbaseWalletSDK({
+                        appName: "Gigaliquid",
+                        appLogoUrl: "https://your-app-logo.png", // Optional logo URL
+                        darkMode: false,
+                    });
+                    const ethereum = coinbaseWallet.makeWeb3Provider("https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID", 1);
+                    const provider = new ethers.providers.Web3Provider(ethereum);
+                    await ethereum.enable();
+                    const signer = provider.getSigner();
+                    const address = await signer.getAddress();
+                    alert(`Connected to Coinbase Wallet! Address: ${address}`);
+                } catch (error) {
+                    alert("Coinbase Wallet connection failed.");
+                    console.error(error);
+                }
+            } else if (walletName === "WalletConnect") {
+                // WalletConnect Integration
+                try {
+                    const WalletConnect = window.WalletConnect;
+                    const connector = new WalletConnect({
+                        bridge: "https://bridge.walletconnect.org",
+                    });
+                    if (!connector.connected) {
+                        await connector.createSession();
+                    }
+                    alert("WalletConnect session created! Check your wallet.");
+                } catch (error) {
+                    alert("WalletConnect connection failed.");
+                    console.error(error);
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Gigaliquid</h1>
+        <p>Fueling creativity and fun with NFTs and meme-powered crypto!</p>
+    </header>
+    <nav>
+        <a href="#about">About</a>
+        <a href="#token">Token Info</a>
+        <a href="#wallet">Wallet Connect</a>
+        <a href="#contact">Contact</a>
+    </nav>
+    <section id="about">
+        <h2>About Gigaliquid</h2>
+        <p>Gigaliquid combines cutting-edge NFTs and meme culture to create a fun, engaging, and rewarding crypto ecosystem.</p>
+    </section>
+    <section id="token">
+        <h2>Token Information</h2>
+        <p><strong>Ticker:</strong> GLIQD</p>
+        <p>Gigaliquid (GLIQD) is your key to accessing exclusive NFTs, community rewards, and more in the Gigaliquid ecosystem.</p>
+    </section>
+    <section id="wallet">
+        <h2>Connect Your Wallet</h2>
+        <p>Select your preferred wallet to interact with Gigaliquid:</p>
+        <div class="wallet-section">
+            <button class="wallet-button" onclick="connectWallet('MetaMask')">Connect with MetaMask</button>
+            <button class="wallet-button" onclick="connectWallet('Coinbase')">Connect with Coinbase Wallet</button>
+            <button class="wallet-button" onclick="connectWallet('WalletConnect')">Connect with WalletConnect</button>
+        </div>
+    </section>
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <p>Follow us on Twitter:  
+           <a href="https://x.com/gigaliquidonhl?s=21" target="_blank" style="color: #1a73e8; text-decoration: none;">@Gigaliquid</a>
+        </p>
+    </section>
+    <footer>
+        <p>&copy; 2025 Gigaliquid. All rights reserved.</p>
+    </footer>
+</body>
+</html>
